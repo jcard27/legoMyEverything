@@ -1,0 +1,49 @@
+%Turn your pictures into lego art
+
+close all
+clear all
+
+%% INPUTS:
+filename = 'images/apple.jpg'; %path to image file
+width = 20; %width of image in legos
+
+%% Load and showoriginal image 
+im = imread(filename);
+figure
+imshow(im)
+title('Original')
+
+%% Rescale based on desired width
+scale = width/size(im, 2);
+im = imresize(im, scale);
+figure
+imshow(im, 'InitialMagnification',5000)
+title('Resized Image')
+
+%% Recolor based on available lego colors
+colors = [0	61	165;... %Bright Blue
+          255130	0;...
+            
+         
+
+legoElementID = [614123;...
+                
+
+colors = colormap(jet(10)); %array of colors (columns are rgb)
+numColors = size(colors,1);
+distance = zeros(numColors, 1);
+im = single(im)./255;
+for ii = 1:size(im,1)
+    for jj = 1:size(im,2)
+        im_color = squeeze((im(ii, jj, :)))';
+        for cc = 1:size(colors, 1)
+            distance(cc) = sqrt(sum( (im_color - colors(cc, :)).^2 ) );
+        end
+        [~, ind] = min(distance);
+        lego_colored_im(ii, jj, :) = colors(ind, :); 
+    end
+end
+
+figure
+imshow(lego_colored_im)
+title('Recolored Image')
